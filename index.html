@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="VNOdoq4ItSFIUXnxQafKCK">
+<head data-page-node-id="MYuO7DwGq81VkxorvVyVRf">
+<meta charset="UTF-8" data-page-node-id="1g4eeAUOJSeC3hRqXGPRHP">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="NXYlteFjURs405TYtYRe8F">
+<title>我的番茄钟 v3</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    background: linear-gradient(135deg, #FFF1E8 0%, #FFE4D6 100%);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 36px 40px;
+    box-shadow: 0 12px 40px rgba(231, 76, 60, 0.12);
+    text-align: center;
+    width: 360px;
+  }
+  .badge {
+    display: inline-block; padding: 6px 16px; border-radius: 999px;
+    font-size: 14px; font-weight: bold; margin-bottom: 20px;
+  }
+  .badge.focus { background: #FDECEA; color: #D63031; }
+  .badge.break { background: #E8F8F2; color: #00A86B; }
+  .ring-wrap { position: relative; width: 240px; height: 240px; margin: 0 auto 20px; }
+  svg { transform: rotate(-90deg); }
+  .bg-circle { stroke: #F2E3DC; }
+  .fg-circle { stroke: #E74C3C; transition: stroke-dashoffset 1s linear; }
+  .fg-circle.break { stroke: #00A86B; }
+  .time {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 52px; font-weight: bold; color: #2D3436; letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats {
+    display: flex; justify-content: space-between; background: #FBF6F3;
+    border-radius: 14px; padding: 12px 18px; margin-bottom: 20px;
+  }
+  .stat { text-align: center; flex: 1; }
+  .stat .num { font-size: 20px; font-weight: bold; color: #D63031; }
+  .stat .label { font-size: 12px; color: #8D7B72; margin-top: 2px; }
+  .btns button {
+    border: none; border-radius: 12px; padding: 12px 26px; font-size: 16px;
+    cursor: pointer; margin: 0 6px; font-weight: bold;
+  }
+  #toggleBtn { background: #E74C3C; color: #fff; }
+  #toggleBtn.break { background: #00A86B; }
+  #resetBtn { background: #F2E3DC; color: #8D5B4C; }
+  .hint { margin-top: 16px; font-size: 12px; color: #B0A196; }
+</style>
+</head>
+<body data-page-node-id="CjsYpbkhFDNjp8oinnQ9Vy">
+  <div class="card" data-page-node-id="vkmnMhEGQGbR6UvvD7Fx5z">
+    <div id="badge" class="badge focus" data-page-node-id="mtaqU19y90pvkM14HV2gVH">🍅 专注中</div>
+    <div class="ring-wrap" data-page-node-id="uxb0SLb59X9oabGxwTjRfT">
+      <svg width="240" height="240" data-page-node-id="qhkumYbj1o5NKn7a0dyqNL">
+        <circle class="bg-circle" cx="120" cy="120" r="104" fill="none" stroke-width="14" data-page-node-id="4iBRhsh3Z9g0GIWDfO1kIr"/>
+        <circle id="ring" class="fg-circle" cx="120" cy="120" r="104" fill="none" stroke-width="14" stroke-linecap="round" data-page-node-id="YXOXvDeLilOCmEY3AbEu6M"/>
+      </svg>
+      <div id="timeText" class="time" data-page-node-id="jXVfZOUHLCvy6Q7TYhOck1">25:00</div>
+    </div>
+    <div class="stats" data-page-node-id="0CQU87hj5JO5fGF17FvlFb">
+      <div class="stat" data-page-node-id="7uhVoHuNyNsEGOAg79RkqF"><div class="num" id="todayCount" data-page-node-id="yc3eKUktdiD2YhGPXbn44z">0</div><div class="label" data-page-node-id="nnnq8lqEyHOz0v8CoUkKvq">今日番茄</div></div>
+      <div class="stat" data-page-node-id="uwLEHOx9n6JFgPFWkRJTCC"><div class="num" id="totalCount" data-page-node-id="ykRvpzy5J09unbctjODBvv">0</div><div class="label" data-page-node-id="n1lrazwOftxGy8Sba4xcc2">累计番茄</div></div>
+      <div class="stat" data-page-node-id="hdA21pl32IYfuEBOT38Y9p"><div class="num" id="totalMinutes" data-page-node-id="snT9jzOd2NzOpCkhUY7Mq3">0</div><div class="label" data-page-node-id="WzvNXFwLrtcThsj3SCTwnT">专注分钟</div></div>
+    </div>
+    <div class="btns" data-page-node-id="dHvPzjonXLBEntPZ2SO80M">
+      <button id="toggleBtn" data-page-node-id="iPYoozMLPqs7WqCU9tlt1h">开始</button>
+      <button id="resetBtn" data-page-node-id="4CFiD5RTSro6daSiEgAB8B">重置</button>
+    </div>
+    <div class="hint" data-page-node-id="eYMKtPw3ZyIlDddt3i9CKU">专注 25 分钟 → 自动休息 5 分钟 · 统计数据自动存在本机浏览器</div>
+  </div>
+
+<script>
+  var FOCUS = 25 * 60, BREAK = 5 * 60;
+  var mode = 'focus', remain = FOCUS, timer = null;
+  var CIRC = 2 * Math.PI * 104;
+  var ring = document.getElementById('ring');
+  ring.style.strokeDasharray = CIRC;
+  ring.style.strokeDashoffset = 0;
+
+  // —— 统计（存在浏览器本地，关页面也不丢）——
+  function loadStats() {
+    try { return JSON.parse(localStorage.getItem('fanqie_v3')) || {date:'', today:0, total:0, minutes:0}; }
+    catch(e) { return {date:'', today:0, total:0, minutes:0}; }
+  }
+  var stats = loadStats();
+  var todayStr = new Date().toISOString().slice(0, 10);
+  if (stats.date !== todayStr) { stats.date = todayStr; stats.today = 0; }
+
+  function saveStats() {
+    try { localStorage.setItem('fanqie_v3', JSON.stringify(stats)); } catch(e) {}
+  }
+  function renderStats() {
+    document.getElementById('todayCount').textContent = stats.today;
+    document.getElementById('totalCount').textContent = stats.total;
+    document.getElementById('totalMinutes').textContent = stats.minutes;
+  }
+
+  function fmt(s) {
+    var m = Math.floor(s / 60), ss = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (ss < 10 ? '0' : '') + ss;
+  }
+
+  function render() {
+    document.getElementById('timeText').textContent = fmt(remain);
+    var total = mode === 'focus' ? FOCUS : BREAK;
+    ring.style.strokeDashoffset = CIRC * (1 - remain / total);
+    var badge = document.getElementById('badge');
+    var btn = document.getElementById('toggleBtn');
+    if (mode === 'focus') {
+      badge.textContent = '🍅 专注中'; badge.className = 'badge focus';
+      btn.className = ''; ring.className = 'fg-circle';
+    } else {
+      badge.textContent = '☕ 休息中'; badge.className = 'badge break';
+      btn.className = 'break'; ring.className = 'fg-circle break';
+    }
+  }
+
+  function beep() {
+    try {
+      var ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.25, 0.5].forEach(function(delay) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 880;
+        g.gain.setValueAtTime(0.2, ctx.currentTime + delay);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.2);
+        o.start(ctx.currentTime + delay); o.stop(ctx.currentTime + delay + 0.2);
+      });
+    } catch(e) {}
+  }
+
+  function tick() {
+    remain--;
+    if (remain <= 0) {
+      if (mode === 'focus') {
+        stats.today++; stats.total++; stats.minutes += 25;
+        saveStats(); renderStats();
+        beep();
+        mode = 'break'; remain = BREAK;
+      } else {
+        beep();
+        mode = 'focus'; remain = FOCUS;
+      }
+    }
+    render();
+  }
+
+  var toggleBtn = document.getElementById('toggleBtn');
+  toggleBtn.onclick = function() {
+    if (timer) { clearInterval(timer); timer = null; toggleBtn.textContent = '继续'; }
+    else { timer = setInterval(tick, 1000); toggleBtn.textContent = '暂停'; }
+  };
+  document.getElementById('resetBtn').onclick = function() {
+    if (timer) { clearInterval(timer); timer = null; }
+    remain = mode === 'focus' ? FOCUS : BREAK;
+    toggleBtn.textContent = '开始';
+    render();
+  };
+
+  renderStats(); render();
+</script>
+</body>
+</html>
